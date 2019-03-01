@@ -9,9 +9,9 @@ import { Observable, of, empty } from "rxjs";
 
 import { Global } from "../global";
 import { PersonalizedPlanService } from "../guided-assistant/personalized-plan/personalized-plan.service";
-import { IResourceFilter } from "../shared/search/search-results/search-results.model";
-import { ArrayUtilityService } from "../shared/services/array-utility.service";
-import { EventUtilityService } from "../shared/services/event-utility.service";
+import { IResourceFilter } from "../common/search/search-results/search-results.model";
+import { ArrayUtilityService } from "../common/services/array-utility.service";
+import { EventUtilityService } from "../common/services/event-utility.service";
 import { ProfileComponent } from "./profile.component";
 
 describe("ProfileComponent", () => {
@@ -390,28 +390,6 @@ describe("ProfileComponent", () => {
 
   it("should define profile component", () => {
     expect(component).toBeDefined();
-  });
-
-  it("should assign component values in getSavedResource method", () => {
-    component.webResources = mockwebresources;
-    mockPersonalizedPlanService.getPersonalizedResources.and.returnValue(
-      of(mockresponse)
-    );
-    component.getSavedResource(mockresourceinput);
-    expect(component.personalizedResources).toEqual(
-      mockPersonalizedPlanResources
-    );
-    expect(component.isSavedResources).toBeTruthy();
-  });
-
-  it("should assign component values in getpersonalizedResources method", () => {
-    spyOn(component, "getSavedResource");
-    mockPersonalizedPlanService.getUserSavedResources.and.returnValue(
-      of(mockUserSavedResources)
-    );
-    component.getpersonalizedResources();
-    expect(component.resourceFilter).toEqual(mockresourceinput);
-    expect(component.getSavedResource).toHaveBeenCalledWith(mockresourceinput);
   });
 
   it("should return filtered topics list based on the input topic and tempTopicsList in filterTopicsList method", () => {
