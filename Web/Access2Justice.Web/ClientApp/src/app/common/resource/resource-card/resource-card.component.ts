@@ -48,7 +48,7 @@ export class ResourceCardComponent implements OnInit {
     private global: Global,
     private modalService: BsModalService,
     private router: Router,
-    private stateCodeService: StateCodeService
+    private stateCodeService: StateCodeService,
   ) {
     if (
       global.role === UserStatus.Shared &&
@@ -112,7 +112,11 @@ export class ResourceCardComponent implements OnInit {
   }
 
   ngOnInit() {
+    const youtubeUrlToIframe = url => url.replace('watch?v=','embed/').concat('?controls=2&iv_load_policy=3&modestbranding=1&showinfo=1');
     if (this.searchResource != null || this.searchResource != undefined) {
+      if(this.searchResource.resourceType === "Videos"){
+        this.searchResource.iframeUrl = youtubeUrlToIframe(this.searchResource.url);
+      }
       this.resource = this.searchResource;
     } else {
       this.resource = this.resource;
