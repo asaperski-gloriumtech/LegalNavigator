@@ -1,4 +1,5 @@
 import { Component, HostListener, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators} from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MsalService } from '@azure/msal-angular';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -52,7 +53,7 @@ export class ShareButtonComponent implements OnInit {
     private msalService: MsalService,
     private navigateDataService: NavigateDataService,
     private router: Router,
-    private personalizedPlanService: PersonalizedPlanService
+    private personalizedPlanService: PersonalizedPlanService,
   ) {
     if (
       global.role === UserStatus.Shared &&
@@ -75,8 +76,13 @@ export class ShareButtonComponent implements OnInit {
     }
   }
 
+  formSharedResources = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email])
+  });
+
   close() {
     this.modalRef.hide();
+    this.formSharedResources.reset();
   }
 
   checkPermalink() {
@@ -153,6 +159,18 @@ export class ShareButtonComponent implements OnInit {
 
   externalLogin() {
     this.msalService.loginRedirect(ENV.consentScopes);
+  }
+
+  submitShareLink() {
+    this.shareService.shareLinkToUser({
+      Oid: this.global.userId,
+      Email: this.formSharedResources.value.email,
+      ItemId: this.id,
+      ResourceType: this.type,
+      ResourceDetails: {}
+    }).subscribe(() => {
+      this.formSharedResources.reset();
+    });
   }
 
   ngOnInit() {
